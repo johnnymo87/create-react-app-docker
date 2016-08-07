@@ -1,3 +1,25 @@
+Initial install:
+```bash
+docker-compose build
+```
+Check your docker images, you now should have one for this app:
+```bash
+$ docker images | head -n 2
+REPOSITORY                                       TAG                 IMAGE ID            CREATED             SIZE
+helloworld_app                                   latest              5f4b13a4d686        27 seconds ago      651.4 MB
+```
+Install the node modules:
+```bash
+docker run -v `pwd`:/src/usr/app helloworld_app npm install
+```
+Run the server:
+```bash
+docker-compose up
+```
+Assuming your docker-machine's ip is `192.168.99.100`, you now should be able to view the app at `http://192.168.99.100:3000/`
+
+# Below is the autogen readme
+
 Below you will find some information on how to perform common tasks.  
 You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/template/README.md).
 
