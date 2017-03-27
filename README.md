@@ -1,22 +1,20 @@
-Initial install:
+### 1. Build the image:
 ```bash
-docker-compose build
+docker build -t helloworld -f Dockerfile .
 ```
-Check your docker images, you now should have one for this app:
+This builds an image named `helloworld`.
+
+### 2. Run the container for a demo
 ```bash
-$ docker images | head -n 2
-REPOSITORY                                       TAG                 IMAGE ID            CREATED             SIZE
-helloworld_app                                   latest              5f4b13a4d686        27 seconds ago      651.4 MB
+docker run -v `pwd`:/usr/src/app -p 3000:3000 --name="helloworld" --rm helloworld
 ```
-Install the node modules:
+Run this in this project's root. The `-p` argument binds the container's port 3000 to your local machine's port 3000. If you docker-machine runs on IP `192.168.99.100` like mine does, then you will be able to view the page at `http://192.168.99.100:3000`. The `-v` argument runs a volume from your current directory to the project root inside the container. The container will run `npm install` and cache the results in `node_modules` in your local machine. Edits you make to the code on your local machine will be reflected in the container. Unfortunately, it does not look like the server reloads these changes, so I'd recommend starting the container without running the server, and then running the the server once inside the container so you can start and stop it without killing the container, as described below.
+
+### 3. Run the container for local development
 ```bash
-docker run -v `pwd`:/src/usr/app helloworld_app npm install
+docker run -v `pwd`:/usr/src/app -p 3000:3000 --name="helloworld" --rm -ti helloworld bash
 ```
-Run the server:
-```bash
-docker-compose up
-```
-Assuming your docker-machine's ip is `192.168.99.100`, you now should be able to view the app at `http://192.168.99.100:3000/`
+Since the server doesn't seem to pick up changes in the code, I'd recommend not running the server until you're inside the container, so that you can stop and start it as needed. As shown above, add a `-ti` argument before the image name, and add `bash` after it. Then once you're in the container, run `npm install && npm start`. If you make edits to the code on your local machine, kill the server with `Ctrl-C` and restart it with `npm start`.
 
 # Below is the autogen readme
 
